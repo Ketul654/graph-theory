@@ -40,7 +40,6 @@ public class PrimeGraph {
             int nextPrime = queue.peek();
             shortestPathLength = levelQueue.peek();
             if (nextPrime == destinationPrime) {
-                queue.clear();
                 break;
             }
 
@@ -74,10 +73,10 @@ public class PrimeGraph {
         return adjNodes;
     }
 
-    private void addAdjPrimesByChangingDigits(int firstDigit, int multiplier, int prime, Set<Integer> adjNodes, Set<Integer> visited) {
+    private void addAdjPrimesByChangingDigits(int digit, int multiplier, int prime, Set<Integer> adjNodes, Set<Integer> visited) {
         for (int i=0;i<10;i++) {
-            if (i != firstDigit) {
-                int adjNode = prime + ((i - firstDigit) * multiplier);
+            if (i != digit) {
+                int adjNode = prime + ((i - digit) * multiplier);
                 if (isPrime(adjNode) && !visited.contains(adjNode)) {
                     adjNodes.add(adjNode);
                 }
