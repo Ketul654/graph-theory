@@ -41,30 +41,24 @@ public class CharacterGraph {
     private void countAllPathBetweenVertices(char a, char e) {
         boolean [] visited = new boolean[vertex];
         int pathCount = 0;
-        int p = dfs(a, e, visited, pathCount);
-        System.out.println(p);
+        System.out.println(dfs(a, e, visited, pathCount));
     }
 
     private int dfs(char a, char e, boolean[] visited, int pathCount) {
 
         visited[a-65] = true;
-        //System.out.println(a + "," + e + " -> " + Arrays.toString(visited));
         if(a == e){
             pathCount++;
-            System.out.println(a + " -> " + pathCount);
         } else {
             Iterator<Character> itr = adjNodes[a-65].iterator();
             while (itr.hasNext()){
                 char v = itr.next();
-                //System.out.println(v);
                 if(!visited[v-65]) {
                     pathCount = dfs(v, e, visited, pathCount);
-                    //dfs(v, e, visited, pathCount);
                 }
             }
         }
         visited[a-65] = false;
-        System.out.println("Making "+(a) + " unvisited");
         return pathCount;
     }
 }
