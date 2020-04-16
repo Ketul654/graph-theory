@@ -3,6 +3,7 @@ package com.graph;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.Set;
+import java.util.Stack;
 
 /**
  * Program to solve https://www.geeksforgeeks.org/water-jug-problem-using-bfs/
@@ -17,7 +18,7 @@ public class WaterJug {
     public static void main(String[] args) {
         WaterJug waterJug = new WaterJug();
 
-        waterJug.bfsToFillJug(8, 29, 1);
+        waterJug.bfsToFillJug(8, 29, 3);
     }
 
     private void bfsToFillJug(int jug1Capacity, int jug2Capacity, int galonToFill) {
@@ -34,7 +35,7 @@ public class WaterJug {
             int jug2State = nextJugState.getJug2State();
             System.out.print(nextJugState);
             steps++;
-            
+
             if(jug2State == galonToFill || jug1State == galonToFill) {
                 finalState = nextJugState;
                 break;
@@ -82,6 +83,7 @@ public class WaterJug {
             if(adjJugStates.size() > 0) {
                 for(JugState state : adjJugStates) {
                     if(!visited.contains(state)) {
+                        state.setPreviousJugState(nextJugState);
                         jugStatesQueue.add(state);
                         visited.add(state);
                     }
@@ -91,23 +93,38 @@ public class WaterJug {
         }
 
         //System.out.println(jugStatesQueue);
+        boolean isItPossible = true;
         if(finalState.getJug2State() == galonToFill) {
             System.out.print(new JugState(0, finalState.getJug2State()));
             steps++;
-            System.out.println("\n" + steps);
         } else if(finalState.getJug1State() == galonToFill){
             System.out.print(new JugState(finalState.getJug1State(), 0));
             steps++;
+        } else {
+            isItPossible = false;
+        }
+
+        if(isItPossible){
             System.out.println("\n" + steps);
+            Stack<JugState> shortedPath = new Stack<>();
+            findShortestPath(finalState, shortedPath);
+            System.out.println(shortedPath);
         } else {
             System.out.println("\nIt is not possible");
         }
+    }
 
+    private void findShortestPath(JugState finalState, Stack<JugState> shortedPath) {
+        shortedPath.add(finalState);
+        if(finalState.previousJugState!=null) {
+            findShortestPath(finalState.previousJugState, shortedPath);
+        }
     }
 
     private class JugState {
         private int jug1State;
         private int jug2State;
+        private JugState previousJugState;
 
         public JugState(int jug1State, int jug2State) {
             this.jug1State = jug1State;
@@ -120,6 +137,14 @@ public class WaterJug {
 
         public int getJug2State() {
             return jug2State;
+        }
+
+        public JugState getPreviousJugState() {
+            return previousJugState;
+        }
+
+        public void setPreviousJugState(JugState previousJugState) {
+            this.previousJugState = previousJugState;
         }
 
         @Override
