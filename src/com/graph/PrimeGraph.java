@@ -37,12 +37,11 @@ public class PrimeGraph {
         visited.add(sourcePrime);
 
         while (!queue.isEmpty()) {
-            int nextPrime = queue.peek();
-            shortestPathLength = levelQueue.peek();
+            int nextPrime = queue.poll();
+            shortestPathLength = levelQueue.poll();
             if (nextPrime == destinationPrime) {
                 break;
             }
-
             Set<Integer> adjNodes = getUnvisitedAdjPrimes(nextPrime, visited);
             if (adjNodes.size() > 0) {
                 for (Integer adjNode : adjNodes) {
@@ -50,9 +49,6 @@ public class PrimeGraph {
                     visited.add(adjNode);
                     levelQueue.add(shortestPathLength + 1);
                 }
-            } else {
-                queue.poll();
-                levelQueue.poll();
             }
         }
         return shortestPathLength;
