@@ -1,9 +1,6 @@
 package com.graph;
 
-import java.util.LinkedHashSet;
-import java.util.LinkedList;
-import java.util.Set;
-import java.util.Stack;
+import java.util.*;
 
 /**
  * Program to solve https://www.geeksforgeeks.org/water-jug-problem-using-bfs/
@@ -40,44 +37,7 @@ public class WaterJug {
                 finalState = nextJugState;
                 break;
             }
-            Set<JugState> adjJugStates = new LinkedHashSet<>();
-
-            // If both jugs are empty
-            if(jug1State == 0 && jug2State == 0) {
-                adjJugStates.add(new JugState(jug1Capacity, 0));
-                adjJugStates.add(new JugState(0, jug2Capacity));
-            } else if(jug1State == jug1Capacity && jug2State == jug2Capacity) { // If both jugs are full
-                adjJugStates.add(new JugState(jug1Capacity, 0));
-                adjJugStates.add(new JugState(0, jug2Capacity));
-            } else {
-                // If only Jug1 is empty
-                if(jug1State == 0) {
-                    adjJugStates.add(new JugState(jug1Capacity, jug2State));
-                }
-
-                // If only Jug2 is empty
-                if(jug2State == 0) {
-                    adjJugStates.add(new JugState(jug1State, jug2Capacity));
-                }
-
-                // If Jug1 is not full
-                if (jug1State < jug1Capacity && jug2State > 0) {
-                    int pour = jug1Capacity - jug1State;
-                    if(pour<=jug2State)
-                        adjJugStates.add(new JugState(jug1Capacity, jug2State - pour));
-                    else
-                        adjJugStates.add(new JugState(jug1State + jug2State, 0));
-                }
-
-                // If Jug2 is not full
-                if(jug2State < jug2Capacity && jug1State > 0) {
-                    int maxPour = jug2Capacity - jug2State;
-                    if(maxPour <=jug1State)
-                        adjJugStates.add(new JugState(jug1State - maxPour, jug2Capacity));
-                    else 
-                        adjJugStates.add(new JugState(0, jug1State + jug2State));
-                }
-            }
+            Set<JugState> adjJugStates = fillJugs(jug1State, jug2State, jug1Capacity, jug2Capacity);
 
             //System.out.println(String.format("%s => %s", nextJugState, adjJugStates));
             if(adjJugStates.size() > 0) {
@@ -91,27 +51,71 @@ public class WaterJug {
             }
             //System.out.println(jugStatesQueue);
         }
-
         //System.out.println(jugStatesQueue);
-        boolean isItPossible = true;
-        if(finalState.getJug2State() == galonToFill) {
-            System.out.print(new JugState(0, finalState.getJug2State()));
-            steps++;
-        } else if(finalState.getJug1State() == galonToFill){
-            System.out.print(new JugState(finalState.getJug1State(), 0));
-            steps++;
-        } else {
-            isItPossible = false;
-        }
-
-        if(isItPossible){
-            System.out.println("\n" + steps);
+        if(isSolutionAvailbale(finalState, galonToFill)){
+            System.out.println("\n" + ++steps);
             Stack<JugState> shortedPath = new Stack<>();
             findShortestPath(finalState, shortedPath);
             System.out.println(shortedPath);
         } else {
             System.out.println("\nIt is not possible");
         }
+    }
+
+    private boolean isSolutionAvailbale(JugState finalState, int galonToFill) {
+        boolean isItPossible = true;
+        if(finalState.getJug2State() == galonToFill) {
+            System.out.print(new JugState(0, finalState.getJug2State()));
+        } else if(finalState.getJug1State() == galonToFill){
+            System.out.print(new JugState(finalState.getJug1State(), 0));
+        } else {
+            isItPossible = false;
+        }
+        return isItPossible;
+    }
+
+    private Set<JugState> fillJugs(int jug1State, int jug2State, int jug1Capacity, int jug2Capacity) {
+
+        Set<JugState> adjJugStates = new HashSet<>();
+
+        // If both jugs are empty
+        if(jug1State == 0 && jug2State == 0) {
+            adjJugStates.add(new JugState(jug1Capacity, 0));
+            adjJugStates.add(new JugState(0, jug2Capacity));
+        } else if(jug1State == jug1Capacity && jug2State == jug2Capacity) { // If both jugs are full
+            adjJugStates.add(new JugState(jug1Capacity, 0));
+            adjJugStates.add(new JugState(0, jug2Capacity));
+        } else {
+            // If only Jug1 is empty
+            if(jug1State == 0) {
+                adjJugStates.add(new JugState(jug1Capacity, jug2State));
+            }
+
+            // If only Jug2 is empty
+            if(jug2State == 0) {
+                adjJugStates.add(new JugState(jug1State, jug2Capacity));
+            }
+
+            // If Jug1 is not full
+            if (jug1State < jug1Capacity && jug2State > 0) {
+                int pour = jug1Capacity - jug1State;
+                if(pour<=jug2State)
+                    adjJugStates.add(new JugState(jug1Capacity, jug2State - pour));
+                else
+                    adjJugStates.add(new JugState(jug1State + jug2State, 0));
+            }
+
+            // If Jug2 is not full
+            if(jug2State < jug2Capacity && jug1State > 0) {
+                int maxPour = jug2Capacity - jug2State;
+                if(maxPour <=jug1State)
+                    adjJugStates.add(new JugState(jug1State - maxPour, jug2Capacity));
+                else
+                    adjJugStates.add(new JugState(0, jug1State + jug2State));
+            }
+        }
+
+        return adjJugStates;
     }
 
     private void findShortestPath(JugState finalState, Stack<JugState> shortedPath) {
