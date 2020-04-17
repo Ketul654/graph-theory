@@ -28,53 +28,49 @@ public class WaterJug {
         JugState finalState = initialJugState;
         while (!jugStatesQueue.isEmpty()) {
             JugState nextJugState = jugStatesQueue.poll();
-            int jug1State = nextJugState.getJug1State();
-            int jug2State = nextJugState.getJug2State();
-            System.out.print(nextJugState);
+            int jug1State = nextJugState.jug1State;
+            int jug2State = nextJugState.jug2State;
+            //System.out.print(nextJugState);
             steps++;
 
             if(jug2State == galonToFill || jug1State == galonToFill) {
                 finalState = nextJugState;
                 break;
             }
-            Set<JugState> adjJugStates = fillJugs(jug1State, jug2State, jug1Capacity, jug2Capacity);
+            Set<JugState> adjJugStates = getAdjJugs(jug1State, jug2State, jug1Capacity, jug2Capacity);
 
-            //System.out.println(String.format("%s => %s", nextJugState, adjJugStates));
+            System.out.println(String.format("%s => %s", nextJugState, adjJugStates));
             if(adjJugStates.size() > 0) {
                 for(JugState state : adjJugStates) {
                     if(!visited.contains(state)) {
-                        state.setPreviousJugState(nextJugState);
+                        state.previousJugState = nextJugState;
                         jugStatesQueue.add(state);
                         visited.add(state);
                     }
                 }
             }
-            //System.out.println(jugStatesQueue);
         }
-        //System.out.println(jugStatesQueue);
-        if(isSolutionAvailbale(finalState, galonToFill)){
+        if(isSolutionAvailable(finalState, galonToFill)){
             System.out.println("\n" + ++steps);
-            Stack<JugState> shortedPath = new Stack<>();
-            findShortestPath(finalState, shortedPath);
-            System.out.println(shortedPath);
+            System.out.println(getShortestPath(finalState));
         } else {
             System.out.println("\nIt is not possible");
         }
     }
 
-    private boolean isSolutionAvailbale(JugState finalState, int galonToFill) {
+    private boolean isSolutionAvailable(JugState finalState, int galonToFill) {
         boolean isItPossible = true;
-        if(finalState.getJug2State() == galonToFill) {
-            System.out.print(new JugState(0, finalState.getJug2State()));
-        } else if(finalState.getJug1State() == galonToFill){
-            System.out.print(new JugState(finalState.getJug1State(), 0));
+        if(finalState.jug2State == galonToFill) {
+            System.out.print(new JugState(0, finalState.jug2State));
+        } else if(finalState.jug1State == galonToFill){
+            System.out.print(new JugState(finalState.jug1State, 0));
         } else {
             isItPossible = false;
         }
         return isItPossible;
     }
 
-    private Set<JugState> fillJugs(int jug1State, int jug2State, int jug1Capacity, int jug2Capacity) {
+    private Set<JugState> getAdjJugs(int jug1State, int jug2State, int jug1Capacity, int jug2Capacity) {
 
         Set<JugState> adjJugStates = new HashSet<>();
 
@@ -118,11 +114,13 @@ public class WaterJug {
         return adjJugStates;
     }
 
-    private void findShortestPath(JugState finalState, Stack<JugState> shortedPath) {
-        shortedPath.add(finalState);
-        if(finalState.previousJugState!=null) {
-            findShortestPath(finalState.previousJugState, shortedPath);
+    private String getShortestPath(JugState finalState) {
+        StringBuilder shortedPath = new StringBuilder(finalState.toString());
+        while (finalState.previousJugState!=null) {
+            shortedPath.insert(0, finalState.previousJugState);
+            finalState = finalState.previousJugState;
         }
+        return shortedPath.toString();
     }
 
     private class JugState {
@@ -133,22 +131,6 @@ public class WaterJug {
         public JugState(int jug1State, int jug2State) {
             this.jug1State = jug1State;
             this.jug2State = jug2State;
-        }
-
-        public int getJug1State() {
-            return jug1State;
-        }
-
-        public int getJug2State() {
-            return jug2State;
-        }
-
-        public JugState getPreviousJugState() {
-            return previousJugState;
-        }
-
-        public void setPreviousJugState(JugState previousJugState) {
-            this.previousJugState = previousJugState;
         }
 
         @Override
