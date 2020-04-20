@@ -32,7 +32,7 @@ public class Forest {
     private void findNoOfTree() {
         boolean [] visited = new boolean[vertex];
         int noOfTree = 0;
-        for(int i=0;i<5;i++){
+        for(int i=0;i<vertex;i++){
             if(!visited[i]){
                 boolean isTree = dfs(i, visited, true);
                 System.out.println("is tree for node " + i + " : " + isTree);
@@ -46,7 +46,7 @@ public class Forest {
         visited[i] = true;
         for(Integer adjNode : adjNodes[i]){
             if(!visited[adjNode]) {
-                dfs(adjNode, visited, isTree);
+                isTree = dfs(adjNode, visited, isTree);
             } else {
                 if(isTree)
                     isTree = false;
@@ -56,10 +56,12 @@ public class Forest {
     }
 
     public static void main(String[] args) {
-        Forest forest = new Forest(5);
+        Forest forest = new Forest(6);
         forest.addEdge(0, 1);
         forest.addEdge(0, 2);
         forest.addEdge(3, 4);
+        forest.addEdge(4, 2);
+        forest.addEdge(4, 5);
         forest.print();
         forest.findNoOfTree();
     }
