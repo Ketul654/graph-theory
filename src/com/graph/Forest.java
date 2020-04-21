@@ -60,8 +60,9 @@ public class Forest {
         forest.addEdge(0, 1);
         forest.addEdge(0, 2);
         forest.addEdge(3, 4);
-        forest.addEdge(4, 2);
+        //forest.addEdge(4, 2);
         forest.addEdge(4, 5);
+        //forest.addEdge(4, 2);
         forest.print();
         forest.findNoOfTree();
     }
