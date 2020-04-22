@@ -2,6 +2,9 @@ package com.graph;
 
 import java.util.Arrays;
 
+/**
+ * Program to solve https://www.geeksforgeeks.org/construct-binary-palindrome-by-repeated-appending-and-trimming/
+ */
 public class BinaryPalindrome {
 
     public static void main(String[] args) {
