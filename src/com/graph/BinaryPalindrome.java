@@ -14,9 +14,7 @@ public class BinaryPalindrome {
         int [] palindrome = new int[n];
         int [] key = new int[k];
 
-        palindrome[0] = 1;
         key[0] = 1;
-        palindrome[n-1] = 1;
 
         for(int i=0; i<n;i=i+k) {
             palindrome[i] = 1;
