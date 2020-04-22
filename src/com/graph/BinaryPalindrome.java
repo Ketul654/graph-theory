@@ -5,33 +5,24 @@ import java.util.Arrays;
 public class BinaryPalindrome {
 
     public static void main(String[] args) {
-        int n = 5005;
-        int k = 20;
+        int n = 50000;
+        int k = 9;
 
-        int[] palindrome = new int[n];
+        int [] palindrome = new int[n];
         int [] key = new int[k];
-        int last = n%k;
 
         palindrome[0] = 1;
         key[0] = 1;
         palindrome[n-1] = 1;
 
-        for(int i=k; i<n;i=i+k) {
+        for(int i=0; i<n;i=i+k) {
             palindrome[i] = 1;
         }
 
-        if(last == 0) {
-            key[k-1] = 1;
-            for(int i=k-1; i<n; i = i+k){
-                palindrome[i] = 1;
-            }
-        }
-
-        if(last>0) {
-            key[last - 1] = 1;
-            for(int i=last-1; i<n; i = i+k){
-                palindrome[i] = 1;
-            }
+        for (int i=n-1; i>0; i = i-k) {
+            palindrome[i] = 1;
+            if(i<k)
+                key[i] = 1;
         }
 
         boolean isPalindrome = true;
@@ -42,11 +33,8 @@ public class BinaryPalindrome {
             }
         }
 
-        System.out.println(isPalindrome);
-
-        System.out.println(last);
-        System.out.println(Arrays.toString(key));
-
-        System.out.println(Arrays.toString(palindrome));
+        System.out.println("Is Palindrome ? : " + isPalindrome);
+        System.out.println("Key ==> " + Arrays.toString(key));
+        System.out.println("Palindrome ==> " + Arrays.toString(palindrome));
     }
 }
