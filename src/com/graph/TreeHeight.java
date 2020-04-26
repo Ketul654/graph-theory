@@ -35,11 +35,14 @@ public class TreeHeight {
             level[i] = 0;
         } else {
             if(level[parent[i]] == -1 && !visited[parent[i]]){
-                level[i] = dfs(parent[i], parent, level, visited);
+                level[i] = dfs(parent[i], parent, level, visited) + 1;
+                //System.out.println("level of index " + i + " = " + level[i]);
             } else {
                 level[i] = level[parent[i]] + 1;
+                //System.out.println("level of index " + i + " = " + level[i]);
             }
         }
-        return level[i] + 1;
+        System.out.println("level of index " + i + " = " + level[i]);
+        return level[i];
     }
 }
